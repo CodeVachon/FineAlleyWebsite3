@@ -9,7 +9,7 @@ component extends="includes.fw1.framework" {
 	this.ormSettings = {
 		dbcreate = ((this.getEnvironment() == "dev")?"update":"none"),
 		eventHandling = true,
-		cfclocation = 'models',
+		cfclocation = 'includes/models',
 		flushatrequestend = false,
 		namingstrategy = "smart",
 		dialect = "MySQL"
@@ -54,7 +54,33 @@ component extends="includes.fw1.framework" {
 		if (isFrameworkReloadRequest() || !structKeyExists(APPLICATION,"websiteSettings")) {
 			ORMClearSession();
 			ORMReload();
+
+			try {
+				var websiteSettingsService = new includes.services.websiteSettingsService();
+				APPLICATION.websiteSettings = websiteSettingsService.editWebsiteSettingsAndSave({domain=CGI.SERVER_NAME});
+			} catch (any e) {
+				writeDump(e);abort;
+			}
 		}
+
+		REQUEST.template = new includes.services.template();
+		REQUEST.security = new includes.services.security();
+
+		REQUEST.template.setSiteName(APPLICATION.websiteSettings.getSiteName());
+		REQUEST.template.addFile('//code.jquery.com/jquery-1.10.1.min.js');
+		REQUEST.template.addFile('//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js');
+		REQUEST.template.addFile('/includes/js/twitter.widgets.min.js');
+		REQUEST.template.addFile('/includes/css/FineAlleyWebsite.min.css');
+		REQUEST.template.addFile('/favicon.ico');
+
+		REQUEST.template.addMetaTag(name="viewport",content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no");
+
+		REQUEST.template.addMetaTag(property="fb:app_id",content="272812729524274");
+		REQUEST.template.addMetaTag(property="og:url",content="http://www.finealley.com#buildUrl(getSectionAndItem())#");
+		REQUEST.template.addMetaTag(property="og:site_name",content="Fine Alley");
+		REQUEST.template.addMetaTag(property="og:type",content="website");
+		REQUEST.template.addMetaTag(property="og:locale",content="en_US");
+		REQUEST.template.addMetaTag(property="og:image",content="http://www.finealley.com/includes/img/finealleySplash1500.jpg");
 	}
 
 
