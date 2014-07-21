@@ -717,7 +717,7 @@ component {
 	 */
 	public string function onMissingView( struct rc ) {
 		// unable to find a matching view - fail with a nice exception
-		viewNotFound();
+		//viewNotFound();
 		// if we got here, we would return the string to be rendered
 		// but viewNotFound() throws an exception...
 		// for example, return view( 'main.missing' );
