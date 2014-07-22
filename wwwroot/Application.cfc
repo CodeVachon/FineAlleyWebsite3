@@ -67,10 +67,14 @@ component extends="includes.fw1.framework" {
 		REQUEST.security = new includes.services.security();
 
 		REQUEST.template.setSiteName(APPLICATION.websiteSettings.getSiteName());
-		REQUEST.template.addFile('//code.jquery.com/jquery-1.10.1.min.js');
-		REQUEST.template.addFile('//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js');
-		REQUEST.template.addFile('/includes/js/twitter.widgets.min.js');
-		REQUEST.template.addFile('/includes/css/FineAlleyWebsite.min.css');
+		if (this.getEnvironment() == "dev") {
+			REQUEST.template.addFile('/includes/js/jquery-1.11.1.min.js');
+			REQUEST.template.addFile('/includes/js/bootstrap.min.js');
+		} else {
+			REQUEST.template.addFile('//code.jquery.com/jquery-1.11.1.min.js');
+			REQUEST.template.addFile('//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js');
+		}
+		
 		REQUEST.template.addFile('/favicon.ico');
 
 		REQUEST.template.addMetaTag(name="viewport",content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no");
